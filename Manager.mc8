@@ -1,0 +1,65 @@
+***** DeedsMcE Project File *****
+* If you read this message, you need to install the last version of Deeds! *
+FVR 3
+SYS 1
+CPU 1
+FCK 2
+ROM 4
+RAM 4
+PIA 0
+PIB 1
+PIC 2
+PID 3
+PIE 4
+PIF 5
+PIG 6
+PIH 7
+POA 0
+POB 1
+POC 2
+POD 3
+POE 4
+POF 5
+POG 6
+POH 7
+INT 007 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 006 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 005 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 004 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 003 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 002 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 001 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+INT 000 SRC 002 PRT 000 TMD 001 TIN 019 EIN 003 
+******* Project File END ********
+; --- MANAGER CODE ---
+ORG 0000h
+
+START:  IN A, (00h)      ; Read switches from IA (Default 00h)
+        OUT (00h), A     ; Send data to Bus on OA (Default 00h)
+
+        ; --- POLLING PHASE ---
+CHECK_READY:
+        IN A, (01h)      ; Read ACK from IB (Default 01h)
+        BIT 1, A         ; Check if Worker ACK (Bit 1) is High
+        JP NZ, CHECK_READY ; If High, Worker is busy
+
+        ; --- STROBE PHASE ---
+        LD A, 01h
+        OUT (01h), A     ; Set STB (Bit 0) High on Port OB (01h)
+
+        ; --- WAIT FOR ACK ---
+WAIT_ACK_HI:
+        IN A, (01h)      ; Read IB (01h)
+        BIT 1, A         ; Wait for ACK (Bit 1)
+        JP Z, WAIT_ACK_HI   ; Keep waiting if zero
+
+        ; --- RELEASE ---
+        LD A, 00h
+        OUT (01h), A     ; Reset STB
+
+WAIT_ACK_LO:
+         IN A,(01h)
+         BIT 1,A
+         JP Z,WAIT_ACK_LO
+
+        JP START
