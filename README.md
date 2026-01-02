@@ -97,6 +97,11 @@ You should see two DMC8 CPUs labeled **MANAGER** and **WORKER**, input switches 
 
 ---
 
-## Author / Course
-- Course: Digital Systems / Chapter 4 (DEEDS, DMC8 Assembly)
+## Course
+- Course: Microprocessor and controllers / Chapter 4 (DEEDS, DMC8 Assembly)
 - Technique used: Polling + Bidirectional Handshaking
+
+
+## Authors
+- Favour Okwudili
+- Aishat Fadekemi Gbemisola Onakoya 
